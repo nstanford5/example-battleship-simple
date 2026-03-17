@@ -112,7 +112,7 @@
   ],
   "witnesses": [
     {
-      "name": "localSetBoard1",
+      "name": "localSetBoard",
       "arguments": [
         {
           "name": "_x1",
@@ -139,27 +139,7 @@
       }
     },
     {
-      "name": "localCheckBoard1",
-      "arguments": [
-        {
-          "name": "x",
-          "type": {
-            "type-name": "Uint",
-            "maxval": 255
-          }
-        }
-      ],
-      "result type": {
-        "type-name": "Enum",
-        "name": "ShotState",
-        "elements": [
-          "MISS",
-          "HIT"
-        ]
-      }
-    },
-    {
-      "name": "localCheckBoard2",
+      "name": "localCheckBoard",
       "arguments": [
         {
           "name": "x",

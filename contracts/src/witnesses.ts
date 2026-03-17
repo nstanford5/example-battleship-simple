@@ -26,19 +26,7 @@ export const createBattlePrivateState = (
 // do I need individual set/check functions for each board? Or can I combine these and just operate
 // on the specific privateState being passed in?
 export const witnesses = {
-    localSetBoard1: ({
-        privateState
-    }: WitnessContext<Ledger, BattlePrivateState>, x1: bigint, x2: bigint): [
-        BattlePrivateState,
-        BoardState
-    ] => {
-        // changes to privateState variables
-        privateState.x1 = x1;
-        privateState.x2 = x2;
-        privateState.boardState = BoardState.SET;
-        return [privateState, privateState.boardState];
-    },// end of localSetBoard1
-    localSetBoard2: ({
+    localSetBoard: ({
         privateState
     }: WitnessContext<Ledger, BattlePrivateState>, x1: bigint, x2: bigint): [
         BattlePrivateState,
@@ -48,8 +36,8 @@ export const witnesses = {
         privateState.x2 = x2;
         privateState.boardState = BoardState.SET;
         return [privateState, privateState.boardState];
-    },// end of localSetBoard2
-    localCheckBoard1: ({
+    },// end of localSetBoard
+    localCheckBoard: ({
         privateState
     }: WitnessContext<Ledger, BattlePrivateState>, x: bigint): [
         BattlePrivateState,
@@ -61,21 +49,7 @@ export const witnesses = {
         }
         privateState.shotState = currentShot;
         return [privateState, privateState.shotState];
-    },// end of localCheckBoard1
-    localCheckBoard2: ({
-        privateState
-    }: WitnessContext<Ledger, BattlePrivateState>, x: bigint): [
-        BattlePrivateState,
-        ShotState
-    ] => {
-        // tests to demonstrate: what happens in our DApp if the wrong calculation happens here?
-        let currentShot = ShotState.MISS;// reset to default -- MISS
-        if(x == privateState.x1 || x == privateState.x2){
-            currentShot = ShotState.HIT;
-        }
-        privateState.shotState = currentShot;
-        return [privateState, privateState.shotState];
-    },// end of localCheckBoard2
+    },// end of localCheckBoard
     localSecretKey: ({
         privateState
     }: WitnessContext<Ledger, BattlePrivateState>): [

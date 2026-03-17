@@ -30,10 +30,8 @@ export ledger winState: WinState;
 export ledger board1HitCount: Counter;
 export ledger board2HitCount: Counter;
 
-witness localSetBoard1(_x1: Uint<8>, _x2: Uint<8>) : BoardState;
-witness localSetBoard2(_x1: Uint<8>, _x2: Uint<8>) : BoardState;
-witness localCheckBoard1(x: Uint<8>) : ShotState;
-witness localCheckBoard2(x: Uint<8>) : ShotState;
+witness localSetBoard(_x1: Uint<8>, _x2: Uint<8>) : BoardState;
+witness localCheckBoard(x: Uint<8>) : ShotState;
 witness localSecretKey(): Bytes<32>;
 
 constructor(_x1: Uint<8>, _x2: Uint<8>) {
@@ -54,7 +52,7 @@ constructor(_x1: Uint<8>, _x2: Uint<8>) {
 
     // best practice example -- don't disclose(localSetBoard1(_x1, _x2)), 
     // disclose only what you need (localBoardState);
-    const localBoardState = localSetBoard1(_x1, _x2);
+    const localBoardState = localSetBoard(_x1, _x2);
     assert(localBoardState == BoardState.SET, "Please update the state of board1 to SET");
     board1State = disclose(localBoardState);
 
@@ -79,7 +77,7 @@ export circuit acceptGame(_x1: Uint<8>, _x2: Uint<8>) : [] {
     const hash2 = commitBoardSpace(_x2 as Bytes<32>, _sk);
     board2.insert(hash2);
 
-    const localBoardState = localSetBoard1(_x1, _x2);
+    const localBoardState = localSetBoard(_x1, _x2);
     assert(localBoardState == BoardState.SET, "Please update the state of your board to SET");
     board2State = disclose(localBoardState);
     
@@ -130,7 +128,7 @@ export circuit checkBoard1 () : [] {
     player2Shot.popFront();
 
     // currentShot has already been exposed, but we need to satisfy the compiler here too
-    const shotState = disclose(localCheckBoard1(currentShot));
+    const shotState = disclose(localCheckBoard(currentShot));
     assert(shotState == ShotState.HIT || shotState == ShotState.MISS, "Please provide a valid state");
 
     if(shotState == ShotState.MISS){
@@ -141,8 +139,7 @@ export circuit checkBoard1 () : [] {
     } else {
 
         // don't trust, verify
-        // this isn't coming back correctly? -- but it works in checkBoard2 (@TODO -- find the difference)
-        //assert(board1.member(honestyCheckHash), "Cheat Detected: Player 2: claimed a HIT, when is was in fact a MISS. Why would they do that?");
+        assert(board1.member(honestyCheckHash), "Cheat Detected: Player 2: claimed a HIT, when is was in fact a MISS. Why would they do that?");
         board1HitCount.increment(1);
         board1Hits.insert(currentShot);
         turn = TurnState.PLAYER_1_SHOOT;
@@ -168,7 +165,7 @@ export circuit checkBoard2 () : [] {
     // could just assume that the lack of signing is an attempt to cheat
     const honestyCheckHash = commitBoardSpace(currentShot as Bytes<32>, _sk);
 
-    const shotState = disclose(localCheckBoard2(currentShot));
+    const shotState = disclose(localCheckBoard(currentShot));
     assert(shotState == ShotState.HIT || shotState == ShotState.MISS, "Please provide a valid state");
 
     if(shotState == ShotState.MISS){

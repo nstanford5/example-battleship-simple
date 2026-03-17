@@ -144,7 +144,7 @@ export class WalletBuilder {
         this.sk = randomBytes(32);
         this.contractAddress = contractAddress;
         this.privateState = createBattlePrivateState(
-            BigInt(0),
+            BigInt(0),// initialize to 0 which is not setable in contract
             BigInt(0),
             BoardState.UNSET,
             ShotState.MISS,
@@ -171,4 +171,4 @@ export class WalletBuilder {
             this.privateState
         );
     }
-}// end of class
+}// end of class WalletBuilder
