@@ -13,13 +13,11 @@ export enum TurnState { PLAYER_1_SHOOT = 0,
 export enum WinState { CONTINUE_PLAY = 0, PLAYER_1_WINS = 1, PLAYER_2_WINS = 2 }
 
 export type Witnesses<PS> = {
-  localSetBoard1(context: __compactRuntime.WitnessContext<Ledger, PS>,
-                 _x1_0: bigint,
-                 _x2_0: bigint): [PS, BoardState];
-  localCheckBoard1(context: __compactRuntime.WitnessContext<Ledger, PS>,
-                   x_0: bigint): [PS, ShotState];
-  localCheckBoard2(context: __compactRuntime.WitnessContext<Ledger, PS>,
-                   x_0: bigint): [PS, ShotState];
+  localSetBoard(context: __compactRuntime.WitnessContext<Ledger, PS>,
+                _x1_0: bigint,
+                _x2_0: bigint): [PS, BoardState];
+  localCheckBoard(context: __compactRuntime.WitnessContext<Ledger, PS>,
+                  x_0: bigint): [PS, ShotState];
   localSecretKey(context: __compactRuntime.WitnessContext<Ledger, PS>): [PS, Uint8Array];
 }
 
