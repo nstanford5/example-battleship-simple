@@ -1,4 +1,4 @@
-pragma language_version 0.21;
+pragma language_version 0.22;
 import CompactStandardLibrary;
 
 export enum BoardState { UNSET, SET }
@@ -18,7 +18,7 @@ export enum WinState {
 export ledger player1: ZswapCoinPublicKey;
 export ledger player2: ZswapCoinPublicKey;
 export ledger turn: TurnState;
-export ledger board1: Set<Bytes<32>>;// linear board shape until the complexity can be increased to 2D
+export ledger board1: Set<Bytes<32>>;// linear board shape
 export ledger board2: Set<Bytes<32>>;// hashed storage of ship locations
 export ledger board1State: BoardState;
 export ledger board2State: BoardState;
@@ -39,8 +39,6 @@ constructor(_x1: Uint<8>, _x2: Uint<8>) {
     assert(_x1 > 0 && _x2 > 0, "No zero index, board starts at 1");
     assert(_x1 <= 20 && _x2 <= 20, "Out of bounds, please keep ships on the board");
     
-    // hashes a publicKey that is specific to this DApp, so users interaction can
-    // only be traced in this DApp
     player1 = ownPublicKey();
     const _sk = localSecretKey();
 
@@ -71,7 +69,6 @@ export circuit acceptGame(_x1: Uint<8>, _x2: Uint<8>) : [] {
     const _sk = localSecretKey();
 
     // hash inputs and store them to the ledger for lookup later
-    // maybe this should be a Merkle Tree instead?
     const hash1 = commitBoardSpace(_x1 as Bytes<32>, _sk);
     board2.insert(hash1);
     const hash2 = commitBoardSpace(_x2 as Bytes<32>, _sk);
@@ -90,7 +87,6 @@ export circuit player1Shoot (x: Uint<8>): [] {
     assert(turn == TurnState.PLAYER_1_SHOOT, "It is not player1 turn to shoot");
     assert(winState == WinState.CONTINUE_PLAY, "A winner has already been declared");
     assert(x > 0 && x <= 20, "Shot out of bounds, please shoot on the board");
-    assert(player1Shot.isEmpty(), "Cheat Detected: Player1: Attempt to double shoot");
 
     // shots are public knowledge
     const currentShot = disclose(x);
@@ -105,7 +101,6 @@ export circuit player2Shoot(x: Uint<8>): [] {
     assert(turn == TurnState.PLAYER_2_SHOOT, "It is not player2 turn to shoot");
     assert(winState == WinState.CONTINUE_PLAY, "A winner has already been declared");
     assert(x > 0 && x <= 20, "Shot out of bounds, please shoot on the board");
-    assert(player2Shot.isEmpty(), "Cheat Detected: Player2: Attempt to double shoot");// maybe a redundant check?
 
     // shots are public knowledge
     const currentShot = disclose(x);
@@ -115,7 +110,6 @@ export circuit player2Shoot(x: Uint<8>): [] {
     turn = TurnState.PLAYER_1_CHECK;
 }
 
-// witness function to return the _sk, instead of as a circuit param
 export circuit checkBoard1 () : [] {
     assert(player1 == ownPublicKey(), "You are not player1");
     assert(winState == WinState.CONTINUE_PLAY, "A winner has already been declared");
@@ -124,8 +118,10 @@ export circuit checkBoard1 () : [] {
 
     const _sk = localSecretKey();
     const currentShot = player2Shot.head().value;
-    const honestyCheckHash = commitBoardSpace(currentShot as Bytes<32>, _sk);
+    assert(!board1Hits.member(currentShot), "Cheat Detected: Player2: Attempt to repeat a previous HIT");
     player2Shot.popFront();
+
+    const honestyCheckHash = commitBoardSpace(currentShot as Bytes<32>, _sk);
 
     // currentShot has already been exposed, but we need to satisfy the compiler here too
     const shotState = disclose(localCheckBoard(currentShot));
@@ -143,6 +139,7 @@ export circuit checkBoard1 () : [] {
         board1HitCount.increment(1);
         board1Hits.insert(currentShot);
         turn = TurnState.PLAYER_1_SHOOT;
+
         // did someone win?
         winState = board1HitCount == 2 ? WinState.PLAYER_2_WINS : WinState.CONTINUE_PLAY;
     }
@@ -155,14 +152,11 @@ export circuit checkBoard2 () : [] {
     assert(turn == TurnState.PLAYER_2_CHECK, "It is not Player 2 turn to CHECK");
     assert(!player1Shot.isEmpty(), "No shot to check");
 
+    const _sk = localSecretKey();
     const currentShot = player1Shot.head().value;
     assert(!board2Hits.member(currentShot), "Cheat Detected: Player 1: Attempt to repeat a previous HIT");
-    const _sk = localSecretKey();
     player1Shot.popFront();
 
-    // Question: does the inclusion of the _sk in a parameter force the user to sign?
-    // This design could cause a problem if tokens are at stake, though I suppose you
-    // could just assume that the lack of signing is an attempt to cheat
     const honestyCheckHash = commitBoardSpace(currentShot as Bytes<32>, _sk);
 
     const shotState = disclose(localCheckBoard(currentShot));
@@ -172,6 +166,7 @@ export circuit checkBoard2 () : [] {
         // don't trust, verify
         assert(!board2.member(honestyCheckHash), "Cheat Detected: Player 2: claimed a MISS, when it was in fact a HIT");
         turn = TurnState.PLAYER_2_SHOOT;
+
     } else {
         // dont trust, verify
         assert(board2.member(honestyCheckHash), "Cheat Detected: Player 2: claimed a HIT, when is was in fact a MISS. Why would they do that?");
@@ -184,12 +179,6 @@ export circuit checkBoard2 () : [] {
     }
 }
 
-// Question: should I be using persistenCommit here? Or is the hash sufficient, because I am
-// also passing it the _sk? Is that best practice?
 circuit commitBoardSpace(_x: Bytes<32>, _sk: Bytes<32>) : Bytes<32> {
     return disclose(persistentHash<Vector<2, Bytes<32>>>([_x, _sk]));
-}
-
-export circuit publicKey(_sk: Bytes<32>): Bytes<32> {
-    return persistentHash<Vector<2, Bytes<32>>>([pad(32, "battleship-simple:pk:"), _sk]);
 }

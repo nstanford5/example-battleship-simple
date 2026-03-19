@@ -31,8 +31,17 @@ export type ImpureCircuits<PS> = {
   checkBoard2(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
 }
 
+export type ProvableCircuits<PS> = {
+  acceptGame(context: __compactRuntime.CircuitContext<PS>,
+             _x1_0: bigint,
+             _x2_0: bigint): __compactRuntime.CircuitResults<PS, []>;
+  player1Shoot(context: __compactRuntime.CircuitContext<PS>, x_0: bigint): __compactRuntime.CircuitResults<PS, []>;
+  player2Shoot(context: __compactRuntime.CircuitContext<PS>, x_0: bigint): __compactRuntime.CircuitResults<PS, []>;
+  checkBoard1(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
+  checkBoard2(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
+}
+
 export type PureCircuits = {
-  publicKey(_sk_0: Uint8Array): Uint8Array;
 }
 
 export type Circuits<PS> = {
@@ -43,7 +52,6 @@ export type Circuits<PS> = {
   player2Shoot(context: __compactRuntime.CircuitContext<PS>, x_0: bigint): __compactRuntime.CircuitResults<PS, []>;
   checkBoard1(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
   checkBoard2(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
-  publicKey(context: __compactRuntime.CircuitContext<PS>, _sk_0: Uint8Array): __compactRuntime.CircuitResults<PS, Uint8Array>;
 }
 
 export type Ledger = {
@@ -101,6 +109,7 @@ export declare class Contract<PS = any, W extends Witnesses<PS> = Witnesses<PS>>
   witnesses: W;
   circuits: Circuits<PS>;
   impureCircuits: ImpureCircuits<PS>;
+  provableCircuits: ProvableCircuits<PS>;
   constructor(witnesses: W);
   initialState(context: __compactRuntime.ConstructorContext<PS>,
                _x1_0: bigint,
