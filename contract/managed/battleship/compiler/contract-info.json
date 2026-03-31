@@ -92,7 +92,7 @@
       }
     },
     {
-      "name": "publicKey",
+      "name": "getDappPubKey",
       "pure": true,
       "proof": false,
       "arguments": [
@@ -159,7 +159,7 @@
       }
     },
     {
-      "name": "localSecretKey",
+      "name": "localSk",
       "arguments": [
       ],
       "result type": {

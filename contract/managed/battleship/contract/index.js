@@ -117,8 +117,8 @@ export class Contract {
     if (typeof(witnesses_0.localCheckBoard) !== 'function') {
       throw new __compactRuntime.CompactError('first (witnesses) argument to Contract constructor does not contain a function-valued field named localCheckBoard');
     }
-    if (typeof(witnesses_0.localSecretKey) !== 'function') {
-      throw new __compactRuntime.CompactError('first (witnesses) argument to Contract constructor does not contain a function-valued field named localSecretKey');
+    if (typeof(witnesses_0.localSk) !== 'function') {
+      throw new __compactRuntime.CompactError('first (witnesses) argument to Contract constructor does not contain a function-valued field named localSk');
     }
     this.witnesses = witnesses_0;
     this.circuits = {
@@ -132,21 +132,21 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('acceptGame',
                                      'argument 1 (as invoked from Typescript)',
-                                     'battleship.compact line 63 char 1',
+                                     'battleship.compact line 62 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
         if (!(typeof(_x1_0) === 'bigint' && _x1_0 >= 0n && _x1_0 <= 255n)) {
           __compactRuntime.typeError('acceptGame',
                                      'argument 1 (argument 2 as invoked from Typescript)',
-                                     'battleship.compact line 63 char 1',
+                                     'battleship.compact line 62 char 1',
                                      'Uint<0..256>',
                                      _x1_0)
         }
         if (!(typeof(_x2_0) === 'bigint' && _x2_0 >= 0n && _x2_0 <= 255n)) {
           __compactRuntime.typeError('acceptGame',
                                      'argument 2 (argument 3 as invoked from Typescript)',
-                                     'battleship.compact line 63 char 1',
+                                     'battleship.compact line 62 char 1',
                                      'Uint<0..256>',
                                      _x2_0)
         }
@@ -176,14 +176,14 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('player1Shoot',
                                      'argument 1 (as invoked from Typescript)',
-                                     'battleship.compact line 89 char 1',
+                                     'battleship.compact line 86 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
         if (!(typeof(x_0) === 'bigint' && x_0 >= 0n && x_0 <= 255n)) {
           __compactRuntime.typeError('player1Shoot',
                                      'argument 1 (argument 2 as invoked from Typescript)',
-                                     'battleship.compact line 89 char 1',
+                                     'battleship.compact line 86 char 1',
                                      'Uint<0..256>',
                                      x_0)
         }
@@ -210,14 +210,14 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('player2Shoot',
                                      'argument 1 (as invoked from Typescript)',
-                                     'battleship.compact line 106 char 1',
+                                     'battleship.compact line 103 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
         if (!(typeof(x_0) === 'bigint' && x_0 >= 0n && x_0 <= 255n)) {
           __compactRuntime.typeError('player2Shoot',
                                      'argument 1 (argument 2 as invoked from Typescript)',
-                                     'battleship.compact line 106 char 1',
+                                     'battleship.compact line 103 char 1',
                                      'Uint<0..256>',
                                      x_0)
         }
@@ -243,7 +243,7 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('checkBoard1',
                                      'argument 1 (as invoked from Typescript)',
-                                     'battleship.compact line 122 char 1',
+                                     'battleship.compact line 119 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
@@ -266,7 +266,7 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('checkBoard2',
                                      'argument 1 (as invoked from Typescript)',
-                                     'battleship.compact line 158 char 1',
+                                     'battleship.compact line 156 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
@@ -281,8 +281,8 @@ export class Contract {
         partialProofData.output = { value: [], alignment: [] };
         return { result: result_0, context: context, proofData: partialProofData, gasCost: context.gasCost };
       },
-      publicKey(context, ...args_1) {
-        return { result: pureCircuits.publicKey(...args_1), context };
+      getDappPubKey(context, ...args_1) {
+        return { result: pureCircuits.getDappPubKey(...args_1), context };
       }
     };
     this.impureCircuits = {
@@ -301,13 +301,12 @@ export class Contract {
     };
   }
   initialState(...args_0) {
-    if (args_0.length !== 4) {
-      throw new __compactRuntime.CompactError(`Contract state constructor: expected 4 arguments (as invoked from Typescript), received ${args_0.length}`);
+    if (args_0.length !== 3) {
+      throw new __compactRuntime.CompactError(`Contract state constructor: expected 3 arguments (as invoked from Typescript), received ${args_0.length}`);
     }
     const constructorContext_0 = args_0[0];
     const _x1_0 = args_0[1];
     const _x2_0 = args_0[2];
-    const _sk_0 = args_0[3];
     if (typeof(constructorContext_0) !== 'object') {
       throw new __compactRuntime.CompactError(`Contract state constructor: expected 'constructorContext' in argument 1 (as invoked from Typescript) to be an object`);
     }
@@ -333,13 +332,6 @@ export class Contract {
                                  'battleship.compact line 37 char 1',
                                  'Uint<0..256>',
                                  _x2_0)
-    }
-    if (!(_sk_0.buffer instanceof ArrayBuffer && _sk_0.BYTES_PER_ELEMENT === 1 && _sk_0.length === 32)) {
-      __compactRuntime.typeError('Contract state constructor',
-                                 'argument 3 (argument 4 as invoked from Typescript)',
-                                 'battleship.compact line 37 char 1',
-                                 'Bytes<32>',
-                                 _sk_0)
     }
     const state_0 = new __compactRuntime.ContractState();
     let stateValue_0 = __compactRuntime.StateValue.newArray();
@@ -524,7 +516,8 @@ export class Contract {
                             'No zero index, board starts at 1');
     __compactRuntime.assert(_x1_0 <= 20n && _x2_0 <= 20n,
                             'Out of bounds, please keep ships on the board');
-    const pubKey_0 = this._publicKey_0(_sk_0);
+    const _sk_0 = this._localSk_0(context, partialProofData);
+    const pubKey_0 = this._getDappPubKey_0(_sk_0);
     __compactRuntime.queryLedgerState(context,
                                       partialProofData,
                                       [
@@ -537,7 +530,7 @@ export class Contract {
                                        { ins: { cached: false, n: 1 } }]);
     const hash1_0 = this._commitBoardSpace_0(__compactRuntime.convertFieldToBytes(32,
                                                                                   _x1_0,
-                                                                                  'battleship.compact line 48 char 36'),
+                                                                                  'battleship.compact line 47 char 36'),
                                              _sk_0);
     __compactRuntime.queryLedgerState(context,
                                       partialProofData,
@@ -557,7 +550,7 @@ export class Contract {
                                        { ins: { cached: true, n: 1 } }]);
     const hash2_0 = this._commitBoardSpace_0(__compactRuntime.convertFieldToBytes(32,
                                                                                   _x2_0,
-                                                                                  'battleship.compact line 50 char 36'),
+                                                                                  'battleship.compact line 49 char 36'),
                                              _sk_0);
     __compactRuntime.queryLedgerState(context,
                                       partialProofData,
@@ -659,12 +652,12 @@ export class Contract {
     });
     return result_0;
   }
-  _localSecretKey_0(context, partialProofData) {
+  _localSk_0(context, partialProofData) {
     const witnessContext_0 = __compactRuntime.createWitnessContext(ledger(context.currentQueryContext.state), context.currentPrivateState, context.currentQueryContext.address);
-    const [nextPrivateState_0, result_0] = this.witnesses.localSecretKey(witnessContext_0);
+    const [nextPrivateState_0, result_0] = this.witnesses.localSk(witnessContext_0);
     context.currentPrivateState = nextPrivateState_0;
     if (!(result_0.buffer instanceof ArrayBuffer && result_0.BYTES_PER_ELEMENT === 1 && result_0.length === 32)) {
-      __compactRuntime.typeError('localSecretKey',
+      __compactRuntime.typeError('localSk',
                                  'return value',
                                  'battleship.compact line 35 char 1',
                                  'Bytes<32>',
@@ -677,8 +670,8 @@ export class Contract {
     return result_0;
   }
   _acceptGame_0(context, partialProofData, _x1_0, _x2_0) {
-    const _sk_0 = this._localSecretKey_0(context, partialProofData);
-    const pubKey_0 = this._publicKey_0(_sk_0);
+    const _sk_0 = this._localSk_0(context, partialProofData);
+    const pubKey_0 = this._getDappPubKey_0(_sk_0);
     __compactRuntime.assert(!this._equal_1(_descriptor_0.fromValue(__compactRuntime.queryLedgerState(context,
                                                                                                      partialProofData,
                                                                                                      [
@@ -726,7 +719,7 @@ export class Contract {
                                        { ins: { cached: false, n: 1 } }]);
     const hash1_0 = this._commitBoardSpace_0(__compactRuntime.convertFieldToBytes(32,
                                                                                   _x1_0,
-                                                                                  'battleship.compact line 77 char 36'),
+                                                                                  'battleship.compact line 74 char 36'),
                                              _sk_0);
     __compactRuntime.queryLedgerState(context,
                                       partialProofData,
@@ -746,7 +739,7 @@ export class Contract {
                                        { ins: { cached: true, n: 1 } }]);
     const hash2_0 = this._commitBoardSpace_0(__compactRuntime.convertFieldToBytes(32,
                                                                                   _x2_0,
-                                                                                  'battleship.compact line 79 char 36'),
+                                                                                  'battleship.compact line 76 char 36'),
                                              _sk_0);
     __compactRuntime.queryLedgerState(context,
                                       partialProofData,
@@ -793,8 +786,8 @@ export class Contract {
     return [];
   }
   _player1Shoot_0(context, partialProofData, x_0) {
-    const _sk_0 = this._localSecretKey_0(context, partialProofData);
-    const pubKey_0 = this._publicKey_0(_sk_0);
+    const _sk_0 = this._localSk_0(context, partialProofData);
+    const pubKey_0 = this._getDappPubKey_0(_sk_0);
     __compactRuntime.assert(this._equal_3(_descriptor_0.fromValue(__compactRuntime.queryLedgerState(context,
                                                                                                     partialProofData,
                                                                                                     [
@@ -921,8 +914,8 @@ export class Contract {
     return [];
   }
   _player2Shoot_0(context, partialProofData, x_0) {
-    const _sk_0 = this._localSecretKey_0(context, partialProofData);
-    const pubKey_0 = this._publicKey_0(_sk_0);
+    const _sk_0 = this._localSk_0(context, partialProofData);
+    const pubKey_0 = this._getDappPubKey_0(_sk_0);
     __compactRuntime.assert(this._equal_4(_descriptor_0.fromValue(__compactRuntime.queryLedgerState(context,
                                                                                                     partialProofData,
                                                                                                     [
@@ -1034,8 +1027,8 @@ export class Contract {
     return [];
   }
   _checkBoard1_0(context, partialProofData) {
-    const _sk_0 = this._localSecretKey_0(context, partialProofData);
-    const pubKey_0 = this._publicKey_0(_sk_0);
+    const _sk_0 = this._localSk_0(context, partialProofData);
+    const pubKey_0 = this._getDappPubKey_0(_sk_0);
     __compactRuntime.assert(this._equal_5(_descriptor_0.fromValue(__compactRuntime.queryLedgerState(context,
                                                                                                     partialProofData,
                                                                                                     [
@@ -1182,7 +1175,7 @@ export class Contract {
                                        { ins: { cached: true, n: 1 } }]);
     const honestyCheckHash_0 = this._commitBoardSpace_0(__compactRuntime.convertFieldToBytes(32,
                                                                                              currentShot_0,
-                                                                                             'battleship.compact line 134 char 47'),
+                                                                                             'battleship.compact line 132 char 47'),
                                                         _sk_0);
     const shotState_0 = this._localCheckBoard_0(context,
                                                 partialProofData,
@@ -1307,8 +1300,8 @@ export class Contract {
     return [];
   }
   _checkBoard2_0(context, partialProofData) {
-    const _sk_0 = this._localSecretKey_0(context, partialProofData);
-    const pubKey_0 = this._publicKey_0(_sk_0);
+    const _sk_0 = this._localSk_0(context, partialProofData);
+    const pubKey_0 = this._getDappPubKey_0(_sk_0);
     __compactRuntime.assert(this._equal_7(_descriptor_0.fromValue(__compactRuntime.queryLedgerState(context,
                                                                                                     partialProofData,
                                                                                                     [
@@ -1470,7 +1463,7 @@ export class Contract {
                                        { ins: { cached: true, n: 1 } }]);
     const honestyCheckHash_0 = this._commitBoardSpace_0(__compactRuntime.convertFieldToBytes(32,
                                                                                              currentShot_0,
-                                                                                             'battleship.compact line 171 char 47'),
+                                                                                             'battleship.compact line 169 char 47'),
                                                         _sk_0);
     const shotState_0 = this._localCheckBoard_0(context,
                                                 partialProofData,
@@ -1522,7 +1515,7 @@ export class Contract {
                                                                                          'member',
                                                                                          { popeq: { cached: true,
                                                                                                     result: undefined } }]).value),
-                              'Cheat Detected: Player 2: claimed a HIT, when is was in fact a MISS. Why would they do that?');
+                              'Cheat Detected: Player 2: claimed a HIT, when it was in fact a MISS. Why would they do that?');
       const tmp_0 = 1n;
       __compactRuntime.queryLedgerState(context,
                                         partialProofData,
@@ -1595,9 +1588,9 @@ export class Contract {
     return [];
   }
   _commitBoardSpace_0(_x_0, _sk_0) {
-    return this._persistentHash_0([_x_0, _sk_0]);
+    const hash_0 = this._persistentHash_0([_x_0, _sk_0]); return hash_0;
   }
-  _publicKey_0(_sk_0) {
+  _getDappPubKey_0(_sk_0) {
     return this._persistentHash_0([new Uint8Array([98, 97, 116, 116, 108, 101, 115, 104, 105, 112, 58, 112, 107, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
                                    _sk_0]);
   }
@@ -2300,22 +2293,22 @@ const _emptyContext = {
 const _dummyContract = new Contract({
   localSetBoard: (...args) => undefined,
   localCheckBoard: (...args) => undefined,
-  localSecretKey: (...args) => undefined
+  localSk: (...args) => undefined
 });
 export const pureCircuits = {
-  publicKey: (...args_0) => {
+  getDappPubKey: (...args_0) => {
     if (args_0.length !== 1) {
-      throw new __compactRuntime.CompactError(`publicKey: expected 1 argument (as invoked from Typescript), received ${args_0.length}`);
+      throw new __compactRuntime.CompactError(`getDappPubKey: expected 1 argument (as invoked from Typescript), received ${args_0.length}`);
     }
     const _sk_0 = args_0[0];
     if (!(_sk_0.buffer instanceof ArrayBuffer && _sk_0.BYTES_PER_ELEMENT === 1 && _sk_0.length === 32)) {
-      __compactRuntime.typeError('publicKey',
+      __compactRuntime.typeError('getDappPubKey',
                                  'argument 1',
-                                 'battleship.compact line 197 char 1',
+                                 'battleship.compact line 196 char 1',
                                  'Bytes<32>',
                                  _sk_0)
     }
-    return _dummyContract._publicKey_0(_sk_0);
+    return _dummyContract._getDappPubKey_0(_sk_0);
   }
 };
 export const contractReferenceLocations =

@@ -1,4 +1,3 @@
-// The file holds wallet functions
 import {
   type CoinPublicKey,
   DustSecretKey,
@@ -14,7 +13,6 @@ import {
 } from '@midnight-ntwrk/midnight-js-types';
 import { ttlOneHour } from '@midnight-ntwrk/midnight-js-utils';
 import { type WalletFacade, type FacadeState } from '@midnight-ntwrk/wallet-sdk-facade';
-import { UnshieldedWallet } from '@midnight-ntwrk/wallet-sdk-unshielded-wallet';
 import {
   type DustWalletOptions,
   type EnvironmentConfiguration,
@@ -28,6 +26,7 @@ export class MidnightWalletProvider implements MidnightProvider, WalletProvider 
 
   private constructor(
     private readonly logger: Logger,
+    private readonly env: EnvironmentConfiguration,
     wallet: WalletFacade,
     private readonly zswapSecretKeys: ZswapSecretKeys,
     private readonly dustSecretKey: DustSecretKey,
@@ -99,6 +98,7 @@ export class MidnightWalletProvider implements MidnightProvider, WalletProvider 
 
     return new MidnightWalletProvider(
       logger,
+      env,
       wallet,
       ZswapSecretKeys.fromSeed(seeds.shielded),
       DustSecretKey.fromSeed(seeds.dust),

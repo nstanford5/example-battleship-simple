@@ -18,7 +18,7 @@ export type Witnesses<PS> = {
                 _x2_0: bigint): [PS, BoardState];
   localCheckBoard(context: __compactRuntime.WitnessContext<Ledger, PS>,
                   x_0: bigint): [PS, ShotState];
-  localSecretKey(context: __compactRuntime.WitnessContext<Ledger, PS>): [PS, Uint8Array];
+  localSk(context: __compactRuntime.WitnessContext<Ledger, PS>): [PS, Uint8Array];
 }
 
 export type ImpureCircuits<PS> = {
@@ -42,7 +42,7 @@ export type ProvableCircuits<PS> = {
 }
 
 export type PureCircuits = {
-  publicKey(_sk_0: Uint8Array): Uint8Array;
+  getDappPubKey(_sk_0: Uint8Array): Uint8Array;
 }
 
 export type Circuits<PS> = {
@@ -53,7 +53,7 @@ export type Circuits<PS> = {
   player2Shoot(context: __compactRuntime.CircuitContext<PS>, x_0: bigint): __compactRuntime.CircuitResults<PS, []>;
   checkBoard1(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
   checkBoard2(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
-  publicKey(context: __compactRuntime.CircuitContext<PS>, _sk_0: Uint8Array): __compactRuntime.CircuitResults<PS, Uint8Array>;
+  getDappPubKey(context: __compactRuntime.CircuitContext<PS>, _sk_0: Uint8Array): __compactRuntime.CircuitResults<PS, Uint8Array>;
 }
 
 export type Ledger = {
@@ -115,8 +115,7 @@ export declare class Contract<PS = any, W extends Witnesses<PS> = Witnesses<PS>>
   constructor(witnesses: W);
   initialState(context: __compactRuntime.ConstructorContext<PS>,
                _x1_0: bigint,
-               _x2_0: bigint,
-               _sk_0: Uint8Array): __compactRuntime.ConstructorResult<PS>;
+               _x2_0: bigint): __compactRuntime.ConstructorResult<PS>;
 }
 
 export declare function ledger(state: __compactRuntime.StateValue | __compactRuntime.ChargedState): Ledger;

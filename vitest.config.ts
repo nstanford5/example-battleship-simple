@@ -9,5 +9,6 @@ export default defineConfig({
     include: ['src/**/*.test.ts'],
     reporters: ['default'],
     sequence: { concurrent: false },
+    disableConsoleIntercept: true,
   },
 });

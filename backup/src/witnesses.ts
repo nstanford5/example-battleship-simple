@@ -48,7 +48,7 @@ export const witnesses = {
         privateState.shotState = currentShot;
         return [privateState, privateState.shotState];
     },// end of localCheckBoard
-    localSecretKey: ({
+    localSk: ({
         privateState
     }: WitnessContext<Ledger, BattlePrivateState>): [
         BattlePrivateState,
