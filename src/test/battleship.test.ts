@@ -160,7 +160,7 @@ describe('Battleship Smart Contract via midnight-js', async () => {
             circuitId: 'acceptGame',
             args: [bobPrivateState.x1, bobPrivateState.x2]
         });
-        logger.info(`Bob successfully joined the game!`);
+        logger.info(`Bob successfully joined the game! txHash: ${txData}`);
 
         const state = await queryLedger(bobProviders);
         expect(state.board2State).toEqual(BoardState.SET);
@@ -170,7 +170,6 @@ describe('Battleship Smart Contract via midnight-js', async () => {
     it('Allows Alice to take the first shot(MISS)', async () => {
         const shot = BigInt(5);// miss
 
-        // @TODO -- add a failed BOB shot here
         logger.info(`Bob tries to shoot out of turn...`);
         await expect(async () => {
             await (submitCallTx as any)(bobProviders, {
